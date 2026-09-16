@@ -1,21 +1,27 @@
 import 'package:dksoft_market_dealer/application_screen.dart';
 import 'package:dksoft_market_dealer/features/commandes/commandes_screen.dart';
-import 'package:dksoft_market_dealer/features/dashboard/dashboard_screen.dart';
+import 'package:dksoft_market_dealer/features/dashboard/presentation/dashboard_screen.dart';
+import 'package:dksoft_market_dealer/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:dksoft_market_dealer/features/profile/profile_screen.dart';
 import 'package:dksoft_market_dealer/features/wallet/wallet_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-enum AppRouter { dashboard, commandes, wallet, profile }
+enum AppRouter { onboarding, dashboard, commandes, wallet, profile }
 
 final _rootNavigation = GlobalKey<NavigatorState>();
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: '/',
+    initialLocation: '/onboarding',
     navigatorKey: _rootNavigation,
     routes: [
+      GoRoute(
+        path: '/onboarding',
+        name: AppRouter.onboarding.name,
+        builder: (context, state) => const OnboardingScreen(),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) =>
             ApplicationScreen(navigationShell: navigationShell),
