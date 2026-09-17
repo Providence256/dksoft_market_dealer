@@ -90,9 +90,8 @@ class _DashboardError extends StatelessWidget {
             gapH4,
             Text(
               message,
-              style: Theme.of(
-                context,
-              ).textTheme.bodySmall?.copyWith(color: AppColors.textSecondaryLight),
+              style: Theme.of(context).textTheme.bodySmall
+                  ?.copyWith(color: AppColors.textSecondaryLight),
               textAlign: TextAlign.center,
             ),
             gapH16,

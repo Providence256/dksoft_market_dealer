@@ -80,7 +80,11 @@ class ProvisionCard extends StatelessWidget {
                 child: ElevatedButton.icon(
                   onPressed: onAlimenter,
                   icon: const Icon(Icons.add, size: 18),
-                  label: const Text('Alimenter'),
+                  label: Text(
+                    'Alimenter',
+                    style: Theme.of(context).textTheme.bodySmall!
+                        .copyWith(color: Colors.white),
+                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.secondary,
                     foregroundColor: Colors.white,
@@ -95,13 +99,19 @@ class ProvisionCard extends StatelessWidget {
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor: Colors.white.withValues(alpha: 0.08),
-                    side: BorderSide(color: Colors.white.withValues(alpha: 0.3)),
+                    side: BorderSide(
+                      color: Colors.white.withValues(alpha: 0.3),
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
                     padding: const EdgeInsets.symmetric(vertical: Sizes.p12),
                   ),
-                  child: const Text('Retirer'),
+                  child: Text(
+                    'Retirer',
+                    style: Theme.of(context).textTheme.bodySmall!
+                        .copyWith(color: Colors.white),
+                  ),
                 ),
               ),
             ],

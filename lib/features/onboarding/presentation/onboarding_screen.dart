@@ -26,7 +26,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   void _goToDashboard(BuildContext context) {
     // No auth flow yet: the dealer lands directly on the dashboard.
     // TODO: route to login/register once the auth module is implemented.
-    context.goNamed(AppRouter.dashboard.name);
+    context.goNamed(AppRoute.login.name);
   }
 
   @override
@@ -59,9 +59,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 itemBuilder: (context, index) {
                   final page = pages[index];
                   return Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: Sizes.p24,
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: Sizes.p24),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -76,12 +74,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         Text(
                           page.description,
                           textAlign: TextAlign.center,
-                          style: Theme.of(
-                            context,
-                          ).textTheme.bodyMedium?.copyWith(
-                            color: AppColors.textSecondaryLight,
-                            fontWeight: FontWeight.normal,
-                          ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: AppColors.textSecondaryLight,
+                                fontWeight: FontWeight.normal,
+                              ),
                         ),
                       ],
                     ),

@@ -7,6 +7,10 @@ environment:
   sdk: ^3.13.1
 
 dependencies:
+  cloud_firestore: ^6.8.0
+  firebase_auth: ^6.5.7
+  firebase_core: ^4.13.0
+  firebase_storage: ^13.4.6
   flutter:
     sdk: flutter
   intl: ^0.20.3
@@ -16,6 +20,7 @@ dependencies:
   path_provider: ^2.1.6
   riverpod: ^3.3.2
   riverpod_annotation: ^4.0.3
+  rxdart: ^0.28.0
 
 dev_dependencies:
   flutter_test:
@@ -26,3 +31,13 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
+        - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Poppins-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Poppins-Light.ttf

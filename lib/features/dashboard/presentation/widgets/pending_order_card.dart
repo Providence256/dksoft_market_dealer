@@ -47,14 +47,14 @@ class _PendingOrderCardState extends State<PendingOrderCard> {
   }
 
   String get _formattedRemaining {
-    final minutes = _remaining.inMinutes.remainder(60).toString().padLeft(
-      2,
-      '0',
-    );
-    final seconds = _remaining.inSeconds.remainder(60).toString().padLeft(
-      2,
-      '0',
-    );
+    final minutes = _remaining.inMinutes
+        .remainder(60)
+        .toString()
+        .padLeft(2, '0');
+    final seconds = _remaining.inSeconds
+        .remainder(60)
+        .toString()
+        .padLeft(2, '0');
     return '$minutes:$seconds';
   }
 
@@ -66,9 +66,6 @@ class _PendingOrderCardState extends State<PendingOrderCard> {
       decoration: BoxDecoration(
         color: AppColors.surfaceLight,
         borderRadius: BorderRadius.circular(Sizes.p16),
-        border: Border(
-          left: BorderSide(color: AppColors.secondary, width: 4),
-        ),
         boxShadow: [
           BoxShadow(
             color: AppColors.shadowLight,
@@ -87,21 +84,21 @@ class _PendingOrderCardState extends State<PendingOrderCard> {
               Container(
                 padding: const EdgeInsets.all(Sizes.p8),
                 decoration: BoxDecoration(
-                  color: AppColors.secondaryLight.withValues(alpha: 0.2),
+                  color: AppColors.primaryLight.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.schedule, color: AppColors.secondary),
+                child: Icon(Icons.schedule, color: AppColors.primary),
               ),
               gapW12,
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('1 commande à valider', style: textTheme.titleMedium),
+                    Text('1 commande à valider', style: textTheme.labelLarge),
                     gapH4,
                     Text(
                       '#${widget.order.orderNumber} · ${CurrencyFormatter.formatUsd(widget.order.amount)}',
-                      style: textTheme.bodySmall?.copyWith(
+                      style: textTheme.labelMedium?.copyWith(
                         color: AppColors.textSecondaryLight,
                       ),
                     ),
@@ -113,13 +110,13 @@ class _PendingOrderCardState extends State<PendingOrderCard> {
                 children: [
                   Text(
                     'Expire dans',
-                    style: textTheme.bodySmall?.copyWith(
+                    style: textTheme.labelSmall?.copyWith(
                       color: AppColors.textSecondaryLight,
                     ),
                   ),
                   Text(
                     _formattedRemaining,
-                    style: textTheme.titleLarge?.copyWith(
+                    style: textTheme.bodySmall?.copyWith(
                       color: AppColors.secondaryDark,
                       fontWeight: FontWeight.bold,
                     ),
@@ -137,7 +134,11 @@ class _PendingOrderCardState extends State<PendingOrderCard> {
                 backgroundColor: AppColors.secondary,
                 foregroundColor: Colors.white,
               ),
-              child: const Text('Voir la commande'),
+              child: Text(
+                'Voir la commande',
+                style: Theme.of(context).textTheme.bodySmall!
+                    .copyWith(color: Colors.white),
+              ),
             ),
           ),
         ],

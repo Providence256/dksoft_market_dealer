@@ -1,4 +1,7 @@
 import 'package:dksoft_market_dealer/application_screen.dart';
+import 'package:dksoft_market_dealer/features/authentication/data/fake_auth_repository.dart';
+import 'package:dksoft_market_dealer/features/authentication/presentation/login_screen.dart';
+import 'package:dksoft_market_dealer/features/authentication/presentation/signup_screen.dart';
 import 'package:dksoft_market_dealer/features/commandes/commandes_screen.dart';
 import 'package:dksoft_market_dealer/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:dksoft_market_dealer/features/onboarding/presentation/onboarding_screen.dart';
@@ -8,19 +11,59 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-enum AppRouter { onboarding, dashboard, commandes, wallet, profile }
+enum AppRoute {
+  onboarding,
+  dashboard,
+  commandes,
+  wallet,
+  profile,
+  login,
+  signup,
+}
+
+const _publicPaths = ['/', '/login', '/signup'];
 
 final _rootNavigation = GlobalKey<NavigatorState>();
 
 final goRouterProvider = Provider<GoRouter>((ref) {
+  final authRepository = ref.watch(fakeAuthRepositoryProvider);
   return GoRouter(
-    initialLocation: '/onboarding',
+    initialLocation: '/',
     navigatorKey: _rootNavigation,
+    redirect: (context, state) {
+      final isLoggedIn = authRepository.currentUser != null;
+      final path = state.matchedLocation;
+      final isAuthRoute = path == '/login' || path == '/signup';
+      final isPublic = _publicPaths.contains(path);
+
+      if (!isLoggedIn && !isPublic) {
+        return Uri(
+          path: '/login',
+          queryParameters: {'from': state.uri.toString()},
+        ).toString();
+      }
+
+      if (isLoggedIn && isAuthRoute) {
+        return '/dashboard';
+      }
+
+      return null;
+    },
     routes: [
       GoRoute(
-        path: '/onboarding',
-        name: AppRouter.onboarding.name,
+        path: '/',
+        name: AppRoute.onboarding.name,
         builder: (context, state) => const OnboardingScreen(),
+      ),
+      GoRoute(
+        path: '/login',
+        name: AppRoute.login.name,
+        builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: '/signup',
+        name: AppRoute.signup.name,
+        builder: (context, state) => const SignUpScreen(),
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) =>
@@ -29,8 +72,8 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: '/',
-                name: AppRouter.dashboard.name,
+                path: '/dashboard',
+                name: AppRoute.dashboard.name,
                 builder: (context, state) => DashboardScreen(),
               ),
             ],
@@ -39,7 +82,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/commandes',
-                name: AppRouter.commandes.name,
+                name: AppRoute.commandes.name,
                 builder: (context, state) => CommandesScreen(),
               ),
             ],
@@ -48,7 +91,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/wallet',
-                name: AppRouter.wallet.name,
+                name: AppRoute.wallet.name,
                 builder: (context, state) => WalletScreen(),
               ),
             ],
@@ -57,7 +100,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/profile',
-                name: AppRouter.profile.name,
+                name: AppRoute.profile.name,
                 builder: (context, state) => ProfileScreen(),
               ),
             ],

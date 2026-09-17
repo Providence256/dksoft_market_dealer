@@ -41,11 +41,11 @@ class ProductsSummaryTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Mes produits proposés', style: textTheme.titleMedium),
+                    Text('Produits proposés', style: textTheme.bodyMedium),
                     gapH4,
                     Text(
                       '${summary.productsCount} produits · ${summary.merchantsCount} commerçants',
-                      style: textTheme.bodySmall?.copyWith(
+                      style: textTheme.labelMedium?.copyWith(
                         color: AppColors.textSecondaryLight,
                       ),
                     ),

@@ -2,6 +2,7 @@ import 'package:dksoft_market_dealer/features/dashboard/domain/entities/dealer_p
 import 'package:dksoft_market_dealer/utils/constants/app_colors.dart';
 import 'package:dksoft_market_dealer/utils/constants/app_sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 /// Identity row at the top of the dashboard: avatar, name, verification
 /// badge, commune and a notifications entry point.
@@ -31,62 +32,28 @@ class DealerDashboardHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(dealer.fullName, style: textTheme.headlineSmall),
-              gapH4,
               Row(
                 children: [
+                  Text(dealer.fullName, style: textTheme.headlineSmall),
+                  gapW4,
                   if (dealer.isVerified) ...[
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: Sizes.p8,
-                        vertical: 2,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.successLight,
-                        borderRadius: BorderRadius.circular(Sizes.p12),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.verified,
-                            size: 14,
-                            color: AppColors.success,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            'Vérifié',
-                            style: textTheme.bodySmall?.copyWith(
-                              color: AppColors.success,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    gapW8,
+                    Icon(Icons.verified, size: 14, color: Colors.blue),
                   ],
-                  Text(
-                    dealer.commune,
-                    style: textTheme.bodySmall?.copyWith(
-                      color: AppColors.textSecondaryLight,
-                    ),
-                  ),
                 ],
               ),
             ],
           ),
         ),
         Container(
-          decoration: const BoxDecoration(
-            color: AppColors.cardLight,
+          decoration: BoxDecoration(
+            color: AppColors.primaryLight.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
           child: IconButton(
             onPressed: () {},
-            icon: Icon(
-              Icons.notifications_none_rounded,
-              color: AppColors.textPrimaryLight,
+            icon: HugeIcon(
+              icon: HugeIcons.strokeRoundedNotification01,
+              color: AppColors.primary,
             ),
           ),
         ),

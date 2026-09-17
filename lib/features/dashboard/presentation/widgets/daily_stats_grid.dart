@@ -25,7 +25,7 @@ class DailyStatsGrid extends StatelessWidget {
             Text("Aujourd'hui", style: textTheme.headlineSmall),
             Text(
               DateFormatterFr.dayLabel(stats.date),
-              style: textTheme.bodySmall?.copyWith(
+              style: textTheme.labelMedium?.copyWith(
                 color: AppColors.textSecondaryLight,
               ),
             ),
@@ -97,14 +97,14 @@ class _StatTile extends StatelessWidget {
         children: [
           Text(
             label,
-            style: textTheme.bodySmall?.copyWith(
+            style: textTheme.labelMedium?.copyWith(
               color: AppColors.textSecondaryLight,
             ),
           ),
           gapH8,
           Text(
             value,
-            style: textTheme.headlineSmall?.copyWith(
+            style: textTheme.titleLarge?.copyWith(
               color: valueColor ?? AppColors.textPrimaryLight,
             ),
           ),
