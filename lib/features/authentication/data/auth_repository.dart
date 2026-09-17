@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dksoft_market_dealer/features/authentication/domain/app_user.dart';
 import 'package:dksoft_market_dealer/features/authentication/domain/firebase_app_user.dart';
+import 'package:dksoft_market_dealer/features/authentication/domain/user_role.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -12,6 +13,7 @@ class AuthRepository {
   final FirebaseFirestore _firestore;
 
   static String usersPath() => 'users';
+  static String dealersPath() => 'dealers';
 
   AppUser? get currentUser => _convertUser(_auth.currentUser);
 
@@ -41,6 +43,7 @@ class AuthRepository {
     required String phone,
     required String password,
     required String commune,
+    required UserRole role,
     String? address,
     String? email,
   }) async {
@@ -54,14 +57,51 @@ class AuthRepository {
 
     await user.updateDisplayName(fullName);
 
-    await _firestore.collection(usersPath()).doc(user.uid).set({
+    // Client accounts are usable immediately; dealer (and, later,
+    // commerçant/motard) accounts need admin validation first (§6.2/§6.4).
+    final status = role == UserRole.dealer ? 'pending' : 'validated';
+
+    final batch = _firestore.batch();
+
+    batch.set(_firestore.collection(usersPath()).doc(user.uid), {
       'fullName': fullName,
       'phone': phone,
       'contactEmail': email,
       'commune': commune,
       'address': address,
+      'role': role.name,
+      'status': status,
       'createdAt': FieldValue.serverTimestamp(),
     });
+
+    if (role == UserRole.dealer) {
+      // Seeds the provision wallet described in §5.5: nothing available,
+      // nothing blocked, nothing to withdraw until the dealer is validated
+      // and alimente sa provision.
+      batch.set(_firestore.collection(dealersPath()).doc(user.uid), {
+        'fullName': fullName,
+        'commune': commune,
+        'isVerified': false,
+        'provisionAvailable': 0,
+        'provisionBlocked': 0,
+        'withdrawable': 0,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    }
+
+    await batch.commit();
+  }
+
+  /// Reads back the role stored on `users/{uid}` at sign-up. Returns null
+  /// if the profile doc doesn't exist yet (race with sign-up) or predates
+  /// the role field.
+  Future<UserRole?> fetchUserRole(String uid) async {
+    final doc = await _firestore.collection(usersPath()).doc(uid).get();
+    final raw = doc.data()?['role'] as String?;
+    for (final role in UserRole.values) {
+      if (role.name == raw) return role;
+    }
+    return null;
   }
 
   Future<void> signOut() => _auth.signOut();

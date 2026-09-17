@@ -1,7 +1,8 @@
 import 'package:dksoft_market_dealer/application_screen.dart';
-import 'package:dksoft_market_dealer/features/authentication/data/fake_auth_repository.dart';
+import 'package:dksoft_market_dealer/features/authentication/data/auth_repository.dart';
 import 'package:dksoft_market_dealer/features/authentication/presentation/login_screen.dart';
 import 'package:dksoft_market_dealer/features/authentication/presentation/signup_screen.dart';
+import 'package:dksoft_market_dealer/features/authentication/presentation/widgets/role_guard.dart';
 import 'package:dksoft_market_dealer/features/commandes/commandes_screen.dart';
 import 'package:dksoft_market_dealer/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:dksoft_market_dealer/features/onboarding/presentation/onboarding_screen.dart';
@@ -26,10 +27,11 @@ const _publicPaths = ['/', '/login', '/signup'];
 final _rootNavigation = GlobalKey<NavigatorState>();
 
 final goRouterProvider = Provider<GoRouter>((ref) {
-  final authRepository = ref.watch(fakeAuthRepositoryProvider);
+  final authRepository = ref.watch(authRepositoryProvider);
   return GoRouter(
     initialLocation: '/',
     navigatorKey: _rootNavigation,
+    refreshListenable: GoRouterRefreshStream(authRepository.authStateChanges()),
     redirect: (context, state) {
       final isLoggedIn = authRepository.currentUser != null;
       final path = state.matchedLocation;
@@ -66,8 +68,9 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const SignUpScreen(),
       ),
       StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) =>
-            ApplicationScreen(navigationShell: navigationShell),
+        builder: (context, state, navigationShell) => RoleGuard(
+          child: ApplicationScreen(navigationShell: navigationShell),
+        ),
         branches: [
           StatefulShellBranch(
             routes: [
