@@ -1,0 +1,223 @@
+import 'package:dksoft_market_dealer/core/domain/merchant.dart';
+import 'package:dksoft_market_dealer/core/domain/pickup_location.dart';
+
+const kTestMerchants = [
+  Merchant(
+    id: '1',
+    name: 'TechHub Store',
+    rating: 4.7,
+    salesCount: 3200,
+    verified: true,
+    pickupLocations: [
+      PickupLocation(
+        id: 'pickup_1_1',
+        name: 'TechHub Store - Boutique principale',
+        address: '45, Avenue du Commerce',
+        commune: 'Gombe',
+        latitude: -4.305,
+        longitude: 15.315,
+        phone: '+243 812 000 001',
+        isDefault: true,
+        reference: '',
+      ),
+      PickupLocation(
+        id: 'pickup_1_2',
+        name: 'TechHub Store - Entrepôt',
+        address: '12, Avenue de la Justice',
+        commune: 'Limete',
+        latitude: -4.338,
+        longitude: 15.320,
+        phone: '+243 812 000 002',
+        reference: '',
+      ),
+    ],
+  ),
+
+  Merchant(
+    id: '2',
+    name: 'iZone Boutique',
+    rating: 4.8,
+    salesCount: 5400,
+    verified: true,
+    pickupLocations: [
+      PickupLocation(
+        id: 'pickup_2_1',
+        name: 'iZone Boutique',
+        address: '78, Boulevard du 30 Juin',
+        commune: 'Gombe',
+        latitude: -4.310,
+        longitude: 15.315,
+        phone: '+243 812 000 003',
+        isDefault: true,
+        reference: '',
+      ),
+    ],
+  ),
+
+  Merchant(
+    id: '3',
+    name: 'OfficePro Supplies',
+    rating: 4.3,
+    salesCount: 980,
+    verified: false,
+    pickupLocations: [
+      PickupLocation(
+        id: 'pickup_3_1',
+        name: 'OfficePro Supplies',
+        address: '23, Avenue des Huileries',
+        commune: 'Lingwala',
+        latitude: -4.320,
+        longitude: 15.305,
+        phone: '+243 812 000 004',
+        isDefault: true,
+        reference: '',
+      ),
+    ],
+  ),
+
+  Merchant(
+    id: '4',
+    name: 'HomeVision Electronics',
+    rating: 4.5,
+    salesCount: 1560,
+    verified: true,
+    pickupLocations: [
+      PickupLocation(
+        id: 'pickup_4_1',
+        name: 'HomeVision - Boutique',
+        address: '156, Avenue Victoire',
+        commune: 'Kasa-Vubu',
+        latitude: -4.340,
+        longitude: 15.295,
+        phone: '+243 812 000 005',
+        isDefault: true,
+        reference: '',
+      ),
+      PickupLocation(
+        id: 'pickup_4_2',
+        name: 'HomeVision - Dépôt',
+        address: '34, Avenue Sendwe',
+        commune: 'Kalamu',
+        latitude: -4.350,
+        longitude: 15.305,
+        phone: '+243 812 000 006',
+        reference: '',
+      ),
+    ],
+  ),
+
+  Merchant(
+    id: '5',
+    name: 'SportLine Outlet',
+    rating: 4.6,
+    salesCount: 2140,
+    verified: true,
+    pickupLocations: [
+      PickupLocation(
+        id: 'pickup_5_1',
+        name: 'SportLine Outlet',
+        address: '89, Avenue Kasa-Vubu',
+        commune: 'Ngaliema',
+        latitude: -4.360,
+        longitude: 15.270,
+        phone: '+243 812 000 007',
+        isDefault: true,
+        reference: '',
+      ),
+    ],
+  ),
+
+  Merchant(
+    id: '6',
+    name: 'Kitchen & Co',
+    rating: 4.4,
+    salesCount: 760,
+    verified: false,
+    pickupLocations: [
+      PickupLocation(
+        id: 'pickup_6_1',
+        name: 'Kitchen & Co',
+        address: '27, Avenue de la Libération',
+        commune: 'Bandalungwa',
+        latitude: -4.335,
+        longitude: 15.285,
+        phone: '+243 812 000 008',
+        isDefault: true,
+        reference: '',
+      ),
+    ],
+  ),
+
+  Merchant(
+    id: '7',
+    name: 'Beauty Essentials',
+    rating: 4.2,
+    salesCount: 4100,
+    verified: false,
+    pickupLocations: [
+      PickupLocation(
+        id: 'pickup_7_1',
+        name: 'Beauty Essentials',
+        address: '64, Avenue du Marché',
+        commune: 'Lemba',
+        latitude: -4.390,
+        longitude: 15.310,
+        phone: '+243 812 000 009',
+        isDefault: true,
+        reference: '',
+      ),
+    ],
+  ),
+
+  Merchant(
+    id: '8',
+    name: 'BabyCare Market',
+    rating: 4.6,
+    salesCount: 2870,
+    verified: true,
+    pickupLocations: [
+      PickupLocation(
+        id: 'pickup_8_1',
+        name: 'BabyCare Market - Boutique',
+        address: '102, Avenue By-Pass',
+        commune: 'Mont-Ngafula',
+        latitude: -4.425,
+        longitude: 15.285,
+        phone: '+243 812 000 010',
+        isDefault: true,
+        reference: '',
+      ),
+      PickupLocation(
+        id: 'pickup_8_2',
+        name: 'BabyCare Market - Entrepôt',
+        address: '18, Avenue de l\'Université',
+        commune: 'Lemba',
+        latitude: -4.385,
+        longitude: 15.315,
+        phone: '+243 812 000 011',
+        reference: '',
+      ),
+    ],
+  ),
+
+  Merchant(
+    id: '9',
+    name: 'AutoFix Garage',
+    rating: 4.1,
+    salesCount: 430,
+    verified: false,
+    pickupLocations: [
+      PickupLocation(
+        id: 'pickup_9_1',
+        name: 'AutoFix Garage',
+        address: '56, Avenue des Poids Lourds',
+        commune: 'Limete',
+        latitude: -4.335,
+        longitude: 15.325,
+        phone: '+243 812 000 012',
+        isDefault: true,
+        reference: '',
+      ),
+    ],
+  ),
+];

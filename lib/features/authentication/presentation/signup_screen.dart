@@ -3,7 +3,6 @@ import 'package:dksoft_market_dealer/features/authentication/presentation/auth_c
 import 'package:dksoft_market_dealer/features/authentication/presentation/widgets/auth_text_field.dart';
 import 'package:dksoft_market_dealer/routing/app_router.dart';
 import 'package:dksoft_market_dealer/utils/constants/app_colors.dart';
-import 'package:dksoft_market_dealer/utils/constants/kinshasa_communes.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,7 +30,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   // same auth flow doubles as a client sign-up until a dedicated client
   // app exists, so both options stay available.
   UserRole _role = UserRole.dealer;
-  String? _commune;
   bool _obscurePassword = true;
   bool _acceptedTerms = false;
 
@@ -66,7 +64,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
           fullName: _nameController.text.trim(),
           phone: '+243${_phoneController.text.replaceAll(' ', '')}',
           password: _passwordController.text,
-          commune: _commune!,
           role: _role,
           email: _emailController.text.trim().isEmpty
               ? null
@@ -99,9 +96,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
 
     ref.listen<AsyncValue<void>>(authControllerProvider, (previous, next) {
       if (next.hasError) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('${next.error}')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('${next.error}')));
       }
     });
 
@@ -136,31 +132,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   'Quelques informations pour créer votre profil.',
                   style: Theme.of(context).textTheme.bodySmall
                       ?.copyWith(color: Colors.grey[600]),
-                ),
-                const SizedBox(height: 20),
-
-                _SectionLabel('Je suis'),
-                const SizedBox(height: 10),
-                SegmentedButton<UserRole>(
-                  segments: const [
-                    ButtonSegment(
-                      value: UserRole.dealer,
-                      label: Text('Dealer'),
-                      icon: Icon(Icons.storefront_outlined),
-                    ),
-                    ButtonSegment(
-                      value: UserRole.client,
-                      label: Text('Client'),
-                      icon: Icon(Icons.person_outline),
-                    ),
-                  ],
-                  selected: {_role},
-                  onSelectionChanged: (selection) =>
-                      setState(() => _role = selection.first),
-                  style: SegmentedButton.styleFrom(
-                    selectedBackgroundColor: AppColors.primary,
-                    selectedForegroundColor: Colors.white,
-                  ),
                 ),
                 const SizedBox(height: 20),
 
@@ -207,23 +178,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   },
                 ),
                 const SizedBox(height: 14),
-
-                DropdownButtonFormField<String>(
-                  initialValue: _commune,
-                  decoration: const InputDecoration(labelText: 'COMMUNE'),
-                  items: kKinshasaCommunes
-                      .map(
-                        (commune) => DropdownMenuItem(
-                          value: commune,
-                          child: Text(commune),
-                        ),
-                      )
-                      .toList(),
-                  onChanged: (value) => setState(() => _commune = value),
-                  validator: (value) =>
-                      value == null ? 'Sélectionnez votre commune' : null,
-                ),
-                const SizedBox(height: 22),
 
                 _SectionLabel('Sécurité'),
                 const SizedBox(height: 10),

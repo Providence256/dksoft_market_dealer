@@ -1,3 +1,4 @@
+import 'package:dksoft_market_dealer/core/domain/brands.dart';
 import 'package:dksoft_market_dealer/features/onboarding/application/onboarding_providers.dart';
 import 'package:dksoft_market_dealer/features/onboarding/presentation/widgets/onboarding_illustration.dart';
 import 'package:dksoft_market_dealer/routing/app_router.dart';

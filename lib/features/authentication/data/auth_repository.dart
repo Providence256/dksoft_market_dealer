@@ -42,7 +42,6 @@ class AuthRepository {
     required String fullName,
     required String phone,
     required String password,
-    required String commune,
     required UserRole role,
     String? address,
     String? email,
@@ -67,7 +66,6 @@ class AuthRepository {
       'fullName': fullName,
       'phone': phone,
       'contactEmail': email,
-      'commune': commune,
       'address': address,
       'role': role.name,
       'status': status,
@@ -80,7 +78,6 @@ class AuthRepository {
       // and alimente sa provision.
       batch.set(_firestore.collection(dealersPath()).doc(user.uid), {
         'fullName': fullName,
-        'commune': commune,
         'isVerified': false,
         'provisionAvailable': 0,
         'provisionBlocked': 0,
