@@ -6,6 +6,23 @@ class ImageUploadRepository {
   ImageUploadRepository(this._storage);
   final FirebaseStorage _storage;
 
+  /// Uploads one local asset (e.g. a category thumbnail) to [storagePath]
+  /// and returns its public download URL.
+  Future<String> uploadImageFromAsset({
+    required String assetPath,
+    required String storagePath,
+  }) async {
+    final byteData = await rootBundle.load(assetPath);
+    final bytes = byteData.buffer.asUint8List(
+      byteData.offsetInBytes,
+      byteData.lengthInBytes,
+    );
+
+    final ref = _storage.ref(storagePath);
+    await ref.putData(bytes, SettableMetadata(contentType: 'image/png'));
+    return ref.getDownloadURL();
+  }
+
   Future<List<String>> uploadProductImageFromAsset(
     List<String> assetPaths,
     String productId,
