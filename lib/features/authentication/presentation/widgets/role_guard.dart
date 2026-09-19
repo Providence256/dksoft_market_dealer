@@ -29,7 +29,7 @@ class RoleGuard extends ConsumerWidget {
         return const _AccessMessage(
           title: 'Application réservée aux dealers',
           message:
-              'Ce compte est enregistré comme client. Téléchargez l’application '
+              'Ce compte est enregistré comme client. Téléchargez l\'application '
               'Dksoft Market pour vos achats, ou connectez-vous avec un compte '
               'dealer.',
         );
@@ -54,7 +54,14 @@ class _AccessMessage extends ConsumerWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.block, color: AppColors.error, size: 40),
+                Container(
+                  padding: EdgeInsets.all(Sizes.p20),
+                  decoration: BoxDecoration(
+                    color: AppColors.error.withValues(alpha: 0.2),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.block, color: AppColors.error, size: 40),
+                ),
                 gapH12,
                 Text(
                   title,
@@ -64,15 +71,21 @@ class _AccessMessage extends ConsumerWidget {
                 gapH8,
                 Text(
                   message,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodySmall?.copyWith(color: AppColors.textSecondaryLight),
+                  style: Theme.of(context).textTheme.labelMedium
+                      ?.copyWith(color: AppColors.textSecondaryLight),
                   textAlign: TextAlign.center,
                 ),
                 gapH16,
-                OutlinedButton(
+                ElevatedButton(
                   onPressed: () => ref.read(authRepositoryProvider).signOut(),
-                  child: const Text('Se déconnecter'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.error,
+                  ),
+                  child: Text(
+                    'Se déconnecter',
+                    style: Theme.of(context).textTheme.bodySmall!
+                        .copyWith(color: Colors.white),
+                  ),
                 ),
               ],
             ),

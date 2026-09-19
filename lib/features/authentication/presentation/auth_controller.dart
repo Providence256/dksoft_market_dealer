@@ -1,5 +1,4 @@
 import 'package:dksoft_market_dealer/features/authentication/data/auth_repository.dart';
-import 'package:dksoft_market_dealer/features/authentication/domain/user_role.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
@@ -28,7 +27,6 @@ class AuthController extends StateNotifier<AsyncValue<void>> {
     required String fullName,
     required String phone,
     required String password,
-    required UserRole role,
     String? email,
   }) async {
     state = const AsyncLoading();
@@ -38,7 +36,6 @@ class AuthController extends StateNotifier<AsyncValue<void>> {
         fullName: fullName,
         phone: phone,
         password: password,
-        role: role,
         email: email,
       );
       state = const AsyncData(null);

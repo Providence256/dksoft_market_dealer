@@ -16,7 +16,11 @@ enum SeedStep { brands, categories, merchants, dealerProfiles, products }
 /// on every step keeps Riverpod's default identity-based change detection
 /// happy — no need for a custom `==`.
 class SeedProgress {
-  const SeedProgress({this.step, this.productsDone = 0, this.productsTotal = 0});
+  const SeedProgress({
+    this.step,
+    this.productsDone = 0,
+    this.productsTotal = 0,
+  });
 
   final SeedStep? step;
   final int productsDone;
@@ -48,12 +52,12 @@ class SeedAllController extends StateNotifier<AsyncValue<SeedProgress>> {
 
   Future<void> _run(SeedStep step, Future<void> Function() action) async {
     state = AsyncData(
-      (state.valueOrNull ?? const SeedProgress()).copyWith(step: step),
+      (state.value ?? const SeedProgress()).copyWith(step: step),
     );
     try {
       await action();
       state = AsyncData(
-        (state.valueOrNull ?? const SeedProgress()).copyWith(clearStep: true),
+        (state.value ?? const SeedProgress()).copyWith(clearStep: true),
       );
     } catch (error, stackTrace) {
       state = AsyncError(error, stackTrace);
@@ -84,15 +88,14 @@ class SeedAllController extends StateNotifier<AsyncValue<SeedProgress>> {
   Future<void> seedDealerProfiles() {
     return _run(
       SeedStep.dealerProfiles,
-      () =>
-          _ref.read(dealerProfileSeedRepositoryProvider).seed(kTestDealers),
+      () => _ref.read(dealerProfileSeedRepositoryProvider).seed(kTestDealers),
     );
   }
 
   Future<void> seedProducts() {
     return _run(SeedStep.products, () async {
       state = AsyncData(
-        (state.valueOrNull ?? const SeedProgress()).copyWith(
+        (state.value ?? const SeedProgress()).copyWith(
           step: SeedStep.products,
           productsDone: 0,
           productsTotal: kTestProducts.length,
@@ -104,7 +107,7 @@ class SeedAllController extends StateNotifier<AsyncValue<SeedProgress>> {
             kTestProducts,
             onProgress: (done, total) {
               state = AsyncData(
-                (state.valueOrNull ?? const SeedProgress()).copyWith(
+                (state.value ?? const SeedProgress()).copyWith(
                   productsDone: done,
                   productsTotal: total,
                 ),

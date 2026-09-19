@@ -42,7 +42,6 @@ class AuthRepository {
     required String fullName,
     required String phone,
     required String password,
-    required UserRole role,
     String? address,
     String? email,
   }) async {
@@ -58,7 +57,6 @@ class AuthRepository {
 
     // Client accounts are usable immediately; dealer (and, later,
     // commerçant/motard) accounts need admin validation first (§6.2/§6.4).
-    final status = role == UserRole.dealer ? 'pending' : 'validated';
 
     final batch = _firestore.batch();
 
@@ -67,24 +65,23 @@ class AuthRepository {
       'phone': phone,
       'contactEmail': email,
       'address': address,
-      'role': role.name,
-      'status': status,
+      'status': 'validated',
       'createdAt': FieldValue.serverTimestamp(),
     });
 
-    if (role == UserRole.dealer) {
-      // Seeds the provision wallet described in §5.5: nothing available,
-      // nothing blocked, nothing to withdraw until the dealer is validated
-      // and alimente sa provision.
-      batch.set(_firestore.collection(dealersPath()).doc(user.uid), {
-        'fullName': fullName,
-        'isVerified': false,
-        'provisionAvailable': 0,
-        'provisionBlocked': 0,
-        'withdrawable': 0,
-        'createdAt': FieldValue.serverTimestamp(),
-      });
-    }
+    // if (role == UserRole.dealer) {
+    //   // Seeds the provision wallet described in §5.5: nothing available,
+    //   // nothing blocked, nothing to withdraw until the dealer is validated
+    //   // and alimente sa provision.
+    //   batch.set(_firestore.collection(dealersPath()).doc(user.uid), {
+    //     'fullName': fullName,
+    //     'isVerified': false,
+    //     'provisionAvailable': 0,
+    //     'provisionBlocked': 0,
+    //     'withdrawable': 0,
+    //     'createdAt': FieldValue.serverTimestamp(),
+    //   });
+    // }
 
     await batch.commit();
   }

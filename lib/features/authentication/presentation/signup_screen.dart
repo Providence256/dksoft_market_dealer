@@ -1,4 +1,3 @@
-import 'package:dksoft_market_dealer/features/authentication/domain/user_role.dart';
 import 'package:dksoft_market_dealer/features/authentication/presentation/auth_controller.dart';
 import 'package:dksoft_market_dealer/features/authentication/presentation/widgets/auth_text_field.dart';
 import 'package:dksoft_market_dealer/routing/app_router.dart';
@@ -26,10 +25,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
-  // This is the dealer app, so dealer is the sensible default — but the
-  // same auth flow doubles as a client sign-up until a dedicated client
-  // app exists, so both options stay available.
-  UserRole _role = UserRole.dealer;
   bool _obscurePassword = true;
   bool _acceptedTerms = false;
 
@@ -64,7 +59,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
           fullName: _nameController.text.trim(),
           phone: '+243${_phoneController.text.replaceAll(' ', '')}',
           password: _passwordController.text,
-          role: _role,
           email: _emailController.text.trim().isEmpty
               ? null
               : _emailController.text.trim(),

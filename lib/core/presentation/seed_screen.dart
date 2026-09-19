@@ -14,7 +14,7 @@ class SeedScreen extends ConsumerWidget {
     final progressAsync = ref.watch(seedAllControllerProvider);
     final notifier = ref.read(seedAllControllerProvider.notifier);
     final isRunning =
-        progressAsync.isLoading || progressAsync.valueOrNull?.step != null;
+        progressAsync.isLoading || progressAsync.value?.step != null;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Seed Firestore (debug)')),
@@ -68,9 +68,10 @@ class SeedScreen extends ConsumerWidget {
                 SeedStep.categories => 'Catégories...',
                 SeedStep.merchants => 'Marchands...',
                 SeedStep.dealerProfiles => 'Profils dealer...',
-                SeedStep.products => progress.productsTotal == 0
-                    ? 'Produits...'
-                    : 'Produits : ${progress.productsDone}/${progress.productsTotal}',
+                SeedStep.products =>
+                  progress.productsTotal == 0
+                      ? 'Produits...'
+                      : 'Produits : ${progress.productsDone}/${progress.productsTotal}',
               };
               return Row(
                 children: [
