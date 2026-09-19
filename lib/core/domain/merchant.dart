@@ -25,10 +25,6 @@ class Merchant {
   PickupLocation? get defaultPickupLocation {
     if (pickupLocations.isEmpty) return null;
 
-    for (final location in pickupLocations) {
-      if (location.isDefault) return location;
-    }
-
     return pickupLocations.first;
   }
 

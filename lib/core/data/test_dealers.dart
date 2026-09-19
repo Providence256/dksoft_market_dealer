@@ -1,61 +1,57 @@
-import 'package:dksoft_market_dealer/core/domain/dealer.dart';
+import 'package:dksoft_market_dealer/core/domain/dealer_model.dart';
 
-const kTestDealers = [
-  Dealer(
+final kTestDealers = [
+  DealerModel(
     id: '1',
-    name: 'A - Ngaliema Express',
+    fullName: 'A - Ngaliema Express',
     phone: '+243810000001',
-    zone: 'Ngaliema',
     provisionDisponible: 500,
     provisionBloquee: 50,
+    provisonRetirable: 75,
     status: DealerStatus.valide,
     rating: 4.7,
-    commandesTraitees: 312,
   ),
-  Dealer(
+  DealerModel(
     id: '2',
-    name: 'B - Lemba Plus',
+    fullName: 'B - Lemba Plus',
     phone: '+243810000002',
-    zone: 'Lemba',
     provisionDisponible: 260,
     provisionBloquee: 40,
+    provisonRetirable: 32,
     status: DealerStatus.valide,
     rating: 4.5,
-    commandesTraitees: 180,
   ),
-  Dealer(
+  DealerModel(
     id: '3',
-    name: 'C - Gombe Premium',
+    fullName: 'C - Gombe Premium',
     phone: '+243810000003',
-    zone: 'Gombe',
     provisionDisponible: 1000,
     provisionBloquee: 0,
+    provisonRetirable: 150,
     status: DealerStatus.valide,
     rating: 4.9,
-    commandesTraitees: 540,
   ),
-  Dealer(
+  DealerModel(
     id: '4',
-    name: 'D - Limete Rapide',
+    fullName: 'D - Limete Rapide',
     phone: '+243810000004',
-    zone: 'Limete',
     provisionDisponible: 90,
     provisionBloquee: 0,
-    // Pas encore validé : ne peut traiter aucune commande (§6.2).
+    // Pas encore validé : aucun gain retirable, ne peut traiter aucune
+    // commande (§6.2).
+    provisonRetirable: 0,
     status: DealerStatus.enAttente,
     rating: 0,
-    commandesTraitees: 0,
   ),
-  Dealer(
+  DealerModel(
     id: '5',
-    name: 'G - Kintambo Shop',
+    fullName: 'G - Kintambo Shop',
     phone: '+243810000005',
-    zone: 'Kintambo',
     // Volontairement bas pour illustrer "provision insuffisante" au checkout.
     provisionDisponible: 20,
     provisionBloquee: 0,
+    provisonRetirable: 5,
     status: DealerStatus.valide,
     rating: 4.1,
-    commandesTraitees: 76,
   ),
 ];

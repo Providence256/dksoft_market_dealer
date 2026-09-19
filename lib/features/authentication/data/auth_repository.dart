@@ -55,9 +55,8 @@ class AuthRepository {
 
     await user.updateDisplayName(fullName);
 
-    // Client accounts are usable immediately; dealer (and, later,
-    // commerçant/motard) accounts need admin validation first (§6.2/§6.4).
-
+    // This app only ever creates dealer accounts — anyone signing up here
+    // needs admin validation before they can treat orders (§6.2).
     final batch = _firestore.batch();
 
     batch.set(_firestore.collection(usersPath()).doc(user.uid), {
@@ -65,23 +64,21 @@ class AuthRepository {
       'phone': phone,
       'contactEmail': email,
       'address': address,
-      'status': 'validated',
+      'status': 'pending',
       'createdAt': FieldValue.serverTimestamp(),
     });
 
-    // if (role == UserRole.dealer) {
-    //   // Seeds the provision wallet described in §5.5: nothing available,
-    //   // nothing blocked, nothing to withdraw until the dealer is validated
-    //   // and alimente sa provision.
-    //   batch.set(_firestore.collection(dealersPath()).doc(user.uid), {
-    //     'fullName': fullName,
-    //     'isVerified': false,
-    //     'provisionAvailable': 0,
-    //     'provisionBlocked': 0,
-    //     'withdrawable': 0,
-    //     'createdAt': FieldValue.serverTimestamp(),
-    //   });
-    // }
+    // Seeds the provision wallet described in §5.5: nothing available,
+    // nothing blocked, nothing to withdraw until the dealer is validated
+    // and alimente sa provision.
+    batch.set(_firestore.collection(dealersPath()).doc(user.uid), {
+      'fullName': fullName,
+      'isVerified': false,
+      'provisionAvailable': 0,
+      'provisionBlocked': 0,
+      'withdrawable': 0,
+      'createdAt': FieldValue.serverTimestamp(),
+    });
 
     await batch.commit();
   }
@@ -96,6 +93,18 @@ class AuthRepository {
       if (role.name == raw) return role;
     }
     return null;
+  }
+
+  /// Source of truth for "is this a dealer account", read from the
+  /// `role` custom claim the `setDealerRoleClaim` Cloud Function sets on
+  /// accounts created with the dealer pseudo-email domain. Forces a token
+  /// refresh so a claim set moments ago (e.g. right after sign-up) is
+  /// visible immediately — Firebase caches the ID token otherwise.
+  Future<bool> currentUserIsDealer() async {
+    final user = _auth.currentUser;
+    if (user == null) return false;
+    final tokenResult = await user.getIdTokenResult(true);
+    return tokenResult.claims?['role'] == 'dealer';
   }
 
   Future<void> signOut() => _auth.signOut();

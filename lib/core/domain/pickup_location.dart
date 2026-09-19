@@ -10,8 +10,6 @@ class PickupLocation {
     required this.reference,
     required this.latitude,
     required this.longitude,
-    this.phone,
-    this.isDefault = false,
   });
   final String id;
   final String name;
@@ -21,9 +19,6 @@ class PickupLocation {
   final double latitude;
   final double longitude;
 
-  final String? phone;
-  final bool isDefault;
-
   PickupLocation copyWith({
     String? id,
     String? name,
@@ -32,8 +27,6 @@ class PickupLocation {
     String? reference,
     double? latitude,
     double? longitude,
-    String? phone,
-    bool? isDefault,
   }) {
     return PickupLocation(
       id: id ?? this.id,
@@ -43,8 +36,6 @@ class PickupLocation {
       reference: reference ?? this.reference,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
-      phone: phone ?? this.phone,
-      isDefault: isDefault ?? this.isDefault,
     );
   }
 
@@ -57,8 +48,6 @@ class PickupLocation {
       'reference': reference,
       'latitude': latitude,
       'longitude': longitude,
-      'phone': phone,
-      'isDefault': isDefault,
     };
   }
 
@@ -71,8 +60,6 @@ class PickupLocation {
       reference: map['reference'] as String,
       latitude: map['latitude'] as double,
       longitude: map['longitude'] as double,
-      phone: map['phone'] != null ? map['phone'] as String : null,
-      isDefault: map['isDefault'] as bool,
     );
   }
 
@@ -83,7 +70,7 @@ class PickupLocation {
 
   @override
   String toString() {
-    return 'PickupLocation(id: $id, name: $name, address: $address, commune: $commune, reference: $reference, latitude: $latitude, longitude: $longitude, phone: $phone, isDefault: $isDefault)';
+    return 'PickupLocation(id: $id, name: $name, address: $address, commune: $commune, reference: $reference, latitude: $latitude, longitude: $longitude)';
   }
 
   @override
@@ -96,9 +83,7 @@ class PickupLocation {
         other.commune == commune &&
         other.reference == reference &&
         other.latitude == latitude &&
-        other.longitude == longitude &&
-        other.phone == phone &&
-        other.isDefault == isDefault;
+        other.longitude == longitude;
   }
 
   @override
@@ -109,8 +94,6 @@ class PickupLocation {
         commune.hashCode ^
         reference.hashCode ^
         latitude.hashCode ^
-        longitude.hashCode ^
-        phone.hashCode ^
-        isDefault.hashCode;
+        longitude.hashCode;
   }
 }

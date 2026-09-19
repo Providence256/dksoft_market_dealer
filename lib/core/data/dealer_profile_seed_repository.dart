@@ -1,9 +1,9 @@
 import 'package:dksoft_market_dealer/core/data/firestore_seeder.dart';
-import 'package:dksoft_market_dealer/core/domain/dealer.dart';
+import 'package:dksoft_market_dealer/core/domain/dealer_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Seeds a public *directory* of demo dealers (rating, zone, provision —
-/// what the client app shows when a customer picks a dealer, §4.3 step 6).
+/// Seeds a public *directory* of demo dealers (rating, provision — what
+/// the client app shows when a customer picks a dealer, §4.3 step 6).
 ///
 /// This is intentionally NOT the `dealers/{uid}` collection: that one is
 /// each real dealer's private provision wallet, written by
@@ -15,8 +15,8 @@ class DealerProfileSeedRepository {
   DealerProfileSeedRepository(this._seeder);
   final FirestoreSeeder _seeder;
 
-  Future<void> seed(List<Dealer> dealers) {
-    return _seeder.seedCollection<Dealer>(
+  Future<void> seed(List<DealerModel> dealers) {
+    return _seeder.seedCollection<DealerModel>(
       'dealer_profiles',
       dealers,
       idOf: (dealer) => dealer.id,
@@ -25,8 +25,7 @@ class DealerProfileSeedRepository {
   }
 }
 
-final dealerProfileSeedRepositoryProvider = Provider<DealerProfileSeedRepository>((
-  ref,
-) {
-  return DealerProfileSeedRepository(ref.watch(firestoreSeederProvider));
-});
+final dealerProfileSeedRepositoryProvider =
+    Provider<DealerProfileSeedRepository>((ref) {
+      return DealerProfileSeedRepository(ref.watch(firestoreSeederProvider));
+    });
