@@ -1,4 +1,5 @@
 import 'package:dksoft_market_dealer/application_screen.dart';
+import 'package:dksoft_market_dealer/features/address/presentation/address_screen.dart';
 import 'package:dksoft_market_dealer/features/authentication/data/auth_repository.dart';
 import 'package:dksoft_market_dealer/features/authentication/presentation/login_screen.dart';
 import 'package:dksoft_market_dealer/features/authentication/presentation/signup_screen.dart';
@@ -21,6 +22,7 @@ enum AppRoute {
   profile,
   login,
   signup,
+  address,
 }
 
 const _publicPaths = ['/', '/login', '/signup'];
@@ -67,6 +69,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/signup',
         name: AppRoute.signup.name,
         builder: (context, state) => const SignUpScreen(),
+      ),
+      GoRoute(
+        path: '/address',
+        name: AppRoute.address.name,
+        builder: (context, state) => const AddressScreen(),
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) => RoleGuard(

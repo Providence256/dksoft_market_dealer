@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dksoft_market_dealer/core/domain/dealer_model.dart';
+import 'package:dksoft_market_dealer/core/domain/pickup_location.dart';
 import 'package:dksoft_market_dealer/features/authentication/domain/app_user.dart';
 import 'package:dksoft_market_dealer/features/authentication/domain/firebase_app_user.dart';
-import 'package:dksoft_market_dealer/features/authentication/domain/user_role.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -55,8 +56,11 @@ class AuthRepository {
 
     await user.updateDisplayName(fullName);
 
-    // This app only ever creates dealer accounts — anyone signing up here
-    // needs admin validation before they can treat orders (§6.2).
+    // This app only ever creates dealer accounts — every sign-up needs
+    // admin validation before the dealer can treat orders (§6.2). The
+    // `dealer` role itself is NOT written here: setDealerRoleClaim (Cloud
+    // Function) sets it as a custom claim from the account's pseudo-email
+    // domain. currentUserIsDealer() below reads that claim back.
     final batch = _firestore.batch();
 
     batch.set(_firestore.collection(usersPath()).doc(user.uid), {
@@ -71,35 +75,46 @@ class AuthRepository {
     // Seeds the provision wallet described in §5.5: nothing available,
     // nothing blocked, nothing to withdraw until the dealer is validated
     // and alimente sa provision.
+    //
+    // TODO(address): the sign-up form only collects a free-text address
+    // today, but DealerModel.address needs a full PickupLocation (commune,
+    // repère, lat/long) for the delivery-zone logic in §8. Placeholder
+    // values are used below — either add those fields to the sign-up form,
+    // or let the dealer complete this from their profile after admin
+    // validation, and adjust this before shipping.
+    final dealer = DealerModel(
+      id: user.uid,
+      fullName: fullName,
+      phone: phone,
+      email: email,
+      address: PickupLocation(
+        id: user.uid,
+        name: fullName,
+        address: address ?? '',
+        commune: '',
+        reference: '',
+        latitude: 0,
+        longitude: 0,
+      ),
+      provisionDisponible: 0,
+      provisionBloquee: 0,
+      provisonRetirable: 0,
+      status: DealerStatus.enAttente,
+      rating: 0,
+    );
+
     batch.set(_firestore.collection(dealersPath()).doc(user.uid), {
-      'fullName': fullName,
-      'isVerified': false,
-      'provisionAvailable': 0,
-      'provisionBlocked': 0,
-      'withdrawable': 0,
+      ...dealer.toMap(),
       'createdAt': FieldValue.serverTimestamp(),
     });
 
     await batch.commit();
   }
 
-  /// Reads back the role stored on `users/{uid}` at sign-up. Returns null
-  /// if the profile doc doesn't exist yet (race with sign-up) or predates
-  /// the role field.
-  Future<UserRole?> fetchUserRole(String uid) async {
-    final doc = await _firestore.collection(usersPath()).doc(uid).get();
-    final raw = doc.data()?['role'] as String?;
-    for (final role in UserRole.values) {
-      if (role.name == raw) return role;
-    }
-    return null;
-  }
-
-  /// Source of truth for "is this a dealer account", read from the
-  /// `role` custom claim the `setDealerRoleClaim` Cloud Function sets on
-  /// accounts created with the dealer pseudo-email domain. Forces a token
-  /// refresh so a claim set moments ago (e.g. right after sign-up) is
-  /// visible immediately — Firebase caches the ID token otherwise.
+  /// Source of truth for "is this a dealer account" — reads the `role`
+  /// custom claim set by the setDealerRoleClaim Cloud Function. Forces a
+  /// token refresh so a claim set moments ago (e.g. right after sign-up)
+  /// is visible immediately; Firebase otherwise caches the ID token.
   Future<bool> currentUserIsDealer() async {
     final user = _auth.currentUser;
     if (user == null) return false;

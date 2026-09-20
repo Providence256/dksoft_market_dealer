@@ -72,14 +72,11 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
         return;
       }
 
-      final from = GoRouterState.of(context).uri.queryParameters['from'];
-      if (from != null && from.isNotEmpty) {
-        context.go(Uri.decodeComponent(from));
-      } else if (context.canPop()) {
-        context.pop();
-      } else {
-        context.goNamed(AppRoute.dashboard.name);
-      }
+      // A brand-new dealer always sets their pickup address before the
+      // dashboard — ignore any `from` redirect target here, unlike
+      // LoginScreen where an existing dealer goes straight back to
+      // wherever they were headed.
+      context.goNamed(AppRoute.address.name);
     }
   }
 

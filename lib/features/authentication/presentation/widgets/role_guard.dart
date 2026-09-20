@@ -1,15 +1,14 @@
-import 'package:dksoft_market_dealer/features/authentication/application/current_user_role_provider.dart';
+import 'package:dksoft_market_dealer/features/authentication/application/is_dealer_provider.dart';
 import 'package:dksoft_market_dealer/features/authentication/data/auth_repository.dart';
-import 'package:dksoft_market_dealer/features/authentication/domain/user_role.dart';
 import 'package:dksoft_market_dealer/utils/constants/app_colors.dart';
 import 'package:dksoft_market_dealer/utils/constants/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Wraps the dealer shell so only accounts created with the `dealer` role
-/// can reach it. A client account that ends up here (shared auth flow,
-/// wrong app) sees an explanation instead of dealer data, and can sign
-/// back out.
+/// Wraps the dealer shell so only accounts carrying the `dealer` custom
+/// claim can reach it. A client account that ends up here (shared auth
+/// flow, wrong app) sees an explanation instead of dealer data, and can
+/// sign back out.
 class RoleGuard extends ConsumerWidget {
   const RoleGuard({super.key, required this.child});
 
@@ -17,15 +16,15 @@ class RoleGuard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final roleAsync = ref.watch(currentUserRoleProvider);
+    final isDealerAsync = ref.watch(currentUserIsDealerProvider);
 
-    return roleAsync.when(
+    return isDealerAsync.when(
       loading: () =>
           const Scaffold(body: Center(child: CircularProgressIndicator())),
       error: (error, _) =>
           _AccessMessage(title: 'Une erreur est survenue', message: '$error'),
-      data: (role) {
-        if (role == UserRole.dealer) return child;
+      data: (isDealer) {
+        if (isDealer) return child;
         return const _AccessMessage(
           title: 'Application réservée aux dealers',
           message:
