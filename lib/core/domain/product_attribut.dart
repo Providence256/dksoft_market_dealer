@@ -23,7 +23,7 @@ class ProductAttribut {
     return ProductAttribut(
       name: map['name'] != null ? map['name'] as String : null,
       values: map['values'] != null
-          ? List<String>.from((map['values'] as List<String>))
+          ? List<String>.from(map['values'] as List)
           : null,
     );
   }

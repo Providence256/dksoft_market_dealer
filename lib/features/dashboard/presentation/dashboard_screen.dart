@@ -4,10 +4,13 @@ import 'package:dksoft_market_dealer/features/dashboard/presentation/widgets/dea
 import 'package:dksoft_market_dealer/features/dashboard/presentation/widgets/pending_order_card.dart';
 import 'package:dksoft_market_dealer/features/dashboard/presentation/widgets/products_summary_tile.dart';
 import 'package:dksoft_market_dealer/features/dashboard/presentation/widgets/provision_card.dart';
+import 'package:dksoft_market_dealer/features/provision/domain/entities/provision_request.dart';
+import 'package:dksoft_market_dealer/routing/app_router.dart';
 import 'package:dksoft_market_dealer/utils/constants/app_colors.dart';
 import 'package:dksoft_market_dealer/utils/constants/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -40,8 +43,14 @@ class DashboardScreen extends ConsumerWidget {
                 gapH20,
                 ProvisionCard(
                   wallet: snapshot.wallet,
-                  onAlimenter: () {},
-                  onRetirer: () {},
+                  onAlimenter: () => context.goNamed(
+                    AppRoute.provisionRequest.name,
+                    extra: ProvisionRequestType.depot,
+                  ),
+                  onRetirer: () => context.goNamed(
+                    AppRoute.provisionRequest.name,
+                    extra: ProvisionRequestType.retrait,
+                  ),
                 ),
                 if (snapshot.pendingOrder != null) ...[
                   gapH16,
@@ -55,7 +64,7 @@ class DashboardScreen extends ConsumerWidget {
                 gapH16,
                 ProductsSummaryTile(
                   summary: snapshot.productsSummary,
-                  onTap: () {},
+                  onTap: () => context.goNamed(AppRoute.catalog.name),
                 ),
               ],
             ),

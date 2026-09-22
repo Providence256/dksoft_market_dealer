@@ -100,14 +100,14 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
               children: [
                 Text(
                   'Où récupère-t-on vos commandes ?',
-                  style: Theme.of(context).textTheme.headlineSmall
+                  style: Theme.of(context).textTheme.titleMedium
                       ?.copyWith(fontWeight: FontWeight.w800),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   'Cette adresse sera utilisée par les motards pour la '
                   'livraison.',
-                  style: Theme.of(context).textTheme.bodySmall
+                  style: Theme.of(context).textTheme.labelMedium
                       ?.copyWith(color: Colors.grey[600]),
                 ),
                 const SizedBox(height: 24),

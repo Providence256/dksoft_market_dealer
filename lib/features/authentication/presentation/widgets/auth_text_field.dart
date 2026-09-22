@@ -86,6 +86,7 @@ class AuthTextField extends StatelessWidget {
                     hintStyle: theme.textTheme.titleMedium!.copyWith(
                       color: Colors.grey[400],
                       fontWeight: FontWeight.w500,
+                      fontSize: 14,
                     ),
                   ),
                 ),

@@ -5,8 +5,6 @@ import 'package:dksoft_market_dealer/utils/formatters/currency_formatter.dart';
 import 'package:dksoft_market_dealer/utils/formatters/date_formatter_fr.dart';
 import 'package:flutter/material.dart';
 
-/// 2x2 grid of today's activity — commandes, marge, livrées, annulées —
-/// matching the dashboard indicators in §5.9 of the cahier des charges.
 class DailyStatsGrid extends StatelessWidget {
   const DailyStatsGrid({super.key, required this.stats});
 

@@ -3,7 +3,8 @@ import 'package:dksoft_market_dealer/utils/constants/app_colors.dart';
 import 'package:dksoft_market_dealer/utils/constants/app_sizes.dart';
 import 'package:flutter/material.dart';
 
-/// Entry point to the dealer's proposed products list.
+/// Entry point to the shared product catalog — every dealer sees the
+/// same products and merchants, there's no per-dealer selection.
 class ProductsSummaryTile extends StatelessWidget {
   const ProductsSummaryTile({
     super.key,
@@ -41,10 +42,10 @@ class ProductsSummaryTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Produits proposés', style: textTheme.bodyMedium),
+                    Text('Catalogue produits', style: textTheme.bodyMedium),
                     gapH4,
                     Text(
-                      '${summary.productsCount} produits · ${summary.merchantsCount} commerçants',
+                      '${summary.productsCount} produits - ${summary.merchantsCount} commerçants',
                       style: textTheme.labelMedium?.copyWith(
                         color: AppColors.textSecondaryLight,
                       ),

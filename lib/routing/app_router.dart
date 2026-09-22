@@ -4,10 +4,13 @@ import 'package:dksoft_market_dealer/features/authentication/data/auth_repositor
 import 'package:dksoft_market_dealer/features/authentication/presentation/login_screen.dart';
 import 'package:dksoft_market_dealer/features/authentication/presentation/signup_screen.dart';
 import 'package:dksoft_market_dealer/features/authentication/presentation/widgets/role_guard.dart';
+import 'package:dksoft_market_dealer/features/catalog/presentation/catalog_screen.dart';
 import 'package:dksoft_market_dealer/features/commandes/commandes_screen.dart';
 import 'package:dksoft_market_dealer/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:dksoft_market_dealer/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:dksoft_market_dealer/features/profile/profile_screen.dart';
+import 'package:dksoft_market_dealer/features/provision/domain/entities/provision_request.dart';
+import 'package:dksoft_market_dealer/features/provision/presentation/provision_request_screen.dart';
 import 'package:dksoft_market_dealer/features/wallet/wallet_screen.dart';
 import 'package:dksoft_market_dealer/routing/go_router_refresh_stream.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +20,8 @@ import 'package:go_router/go_router.dart';
 enum AppRoute {
   onboarding,
   dashboard,
+  provisionRequest,
+  catalog,
   commandes,
   wallet,
   profile,
@@ -38,7 +43,6 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     redirect: (context, state) {
       final isLoggedIn = authRepository.currentUser != null;
       final path = state.matchedLocation;
-      final isAuthRoute = path == '/login' || path == '/signup';
       final isPublic = _publicPaths.contains(path);
 
       if (!isLoggedIn && !isPublic) {
@@ -48,8 +52,18 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         ).toString();
       }
 
-      if (isLoggedIn && isAuthRoute) {
-        return '/dashboard';
+      // Only /login auto-redirects once signed in — this is what races
+      // against manual post-sign-in navigation, so LoginScreen doesn't
+      // navigate itself and lets this be the single source of truth.
+      // /signup is deliberately excluded: a brand-new dealer must reach
+      // /address first, and that redirect happens explicitly in
+      // SignUpScreen once sign-up (including its Firestore writes)
+      // fully completes, not the instant Firebase Auth reports a user.
+      if (isLoggedIn && path == '/login') {
+        final from = state.uri.queryParameters['from'];
+        return (from != null && from.isNotEmpty)
+            ? Uri.decodeComponent(from)
+            : '/dashboard';
       }
 
       return null;
@@ -86,6 +100,26 @@ final goRouterProvider = Provider<GoRouter>((ref) {
                 path: '/dashboard',
                 name: AppRoute.dashboard.name,
                 builder: (context, state) => DashboardScreen(),
+                routes: [
+                  GoRoute(
+                    parentNavigatorKey: _rootNavigation,
+                    path: 'provision-request',
+                    name: AppRoute.provisionRequest.name,
+                    pageBuilder: (context, state) {
+                      final type = state.extra as ProvisionRequestType;
+                      return MaterialPage(
+                        fullscreenDialog: true,
+                        child: ProvisionRequestScreen(type: type),
+                      );
+                    },
+                  ),
+                  GoRoute(
+                    parentNavigatorKey: _rootNavigation,
+                    path: 'catalog',
+                    name: AppRoute.catalog.name,
+                    builder: (context, state) => CatalogScreen(),
+                  ),
+                ],
               ),
             ],
           ),

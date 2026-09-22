@@ -46,7 +46,7 @@ class CategoryModal {
       name: map['name'] as String,
       imageUrl: map['imageUrl'] as String,
       subCategory: List<SubCategory>.from(
-        (map['subCategory'] as List<int>).map<SubCategory>(
+        (map['subCategory'] as List).map<SubCategory>(
           (x) => SubCategory.fromMap(x as Map<String, dynamic>),
         ),
       ),

@@ -82,14 +82,14 @@ class DealerModel {
       phone: map['phone'] as String,
       email: map['email'] != null ? map['email'] as String : null,
       address: PickupLocation.fromMap(map['address'] as Map<String, dynamic>),
-      provisionDisponible: map['provisionDisponible'] as double,
-      provisionBloquee: map['provisionBloquee'] as double,
-      provisonRetirable: map['provisonRetirable'] as double,
+      provisionDisponible: (map['provisionDisponible'] as num).toDouble(),
+      provisionBloquee: (map['provisionBloquee'] as num).toDouble(),
+      provisonRetirable: (map['provisonRetirable'] as num).toDouble(),
       status: DealerStatus.values.firstWhere(
         (s) => s.name == map['status'],
         orElse: () => DealerStatus.enAttente,
       ),
-      rating: map['rating'] as double,
+      rating: (map['rating'] as num).toDouble(),
     );
   }
 

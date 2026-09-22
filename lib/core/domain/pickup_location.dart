@@ -58,8 +58,8 @@ class PickupLocation {
       address: map['address'] as String,
       commune: map['commune'] as String,
       reference: map['reference'] as String,
-      latitude: map['latitude'] as double,
-      longitude: map['longitude'] as double,
+      latitude: (map['latitude'] as num).toDouble(),
+      longitude: (map['longitude'] as num).toDouble(),
     );
   }
 

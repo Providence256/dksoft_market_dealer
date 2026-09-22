@@ -47,11 +47,9 @@ class ProductVariation {
   factory ProductVariation.fromMap(Map<String, dynamic> map) {
     return ProductVariation(
       id: map['id'] as String,
-      price: map['price'] as double,
+      price: (map['price'] as num).toDouble(),
       stock: map['stock'] as int,
-      attributeValues: Map<String, String>.from(
-        (map['attributeValues'] as Map<String, String>),
-      ),
+      attributeValues: Map<String, String>.from(map['attributeValues'] as Map),
     );
   }
 

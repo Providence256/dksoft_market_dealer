@@ -42,20 +42,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           password: _passwordController.text,
         );
 
-    if (success && mounted) {
-      if (widget.onSuccess != null) {
-        widget.onSuccess!();
-        return;
-      }
-
-      final from = GoRouterState.of(context).uri.queryParameters['from'];
-      if (from != null && from.isNotEmpty) {
-        context.go(Uri.decodeComponent(from));
-      } else if (context.canPop()) {
-        context.pop();
-      } else {
-        context.goNamed(AppRoute.dashboard.name);
-      }
+    // No manual navigation here: as soon as sign-in succeeds, Firebase's
+    // auth stream fires, the router's refreshListenable picks it up, and
+    // its own `redirect` moves away from /login (honoring `from` itself).
+    // Navigating here too raced that automatic redirect and crashed
+    // GoRouterState.of() on a context mid-teardown — see app_router.dart.
+    if (success && mounted && widget.onSuccess != null) {
+      widget.onSuccess!();
     }
   }
 
