@@ -4,11 +4,23 @@ import 'package:dksoft_market_dealer/features/dashboard/domain/entities/daily_st
 import 'package:dksoft_market_dealer/features/dashboard/domain/entities/dashboard_snapshot.dart';
 import 'package:dksoft_market_dealer/features/dashboard/domain/entities/dealer_profile.dart';
 import 'package:dksoft_market_dealer/features/dashboard/domain/entities/dealer_wallet.dart';
+import 'package:dksoft_market_dealer/features/dashboard/domain/entities/pending_order.dart';
 import 'package:dksoft_market_dealer/features/dashboard/domain/entities/products_summary.dart';
+import 'package:dksoft_market_dealer/features/orders/data/orders_repository.dart';
+import 'package:dksoft_market_dealer/features/orders/domain/order_model.dart';
+
+/// Window the dealer has to accept a pending order before it's considered
+/// expired, used only to drive the dashboard's countdown card.
+const _acceptanceWindow = Duration(minutes: 15);
 
 class DashboardFirestoreDataSource {
-  DashboardFirestoreDataSource(this._dealerRepository, this._firestore);
+  DashboardFirestoreDataSource(
+    this._dealerRepository,
+    this._ordersRepository,
+    this._firestore,
+  );
   final DealerRepository _dealerRepository;
+  final OrdersRepository _ordersRepository;
   final FirebaseFirestore _firestore;
 
   Future<DashboardSnapshot> fetchDashboard() async {
@@ -18,6 +30,12 @@ class DashboardFirestoreDataSource {
         (await _firestore.collection('products').count().get()).count ?? 0;
     final merchantsCount =
         (await _firestore.collection('merchants').count().get()).count ?? 0;
+
+    final orders = await _ordersRepository.watchOrdersForCurrentDealer().first;
+    final pendingOrder = orders.cast<OrderModel?>().firstWhere(
+      (o) => o!.status == OrderStatus.pending,
+      orElse: () => null,
+    );
 
     return DashboardSnapshot(
       dealer: DealerProfile(
@@ -31,13 +49,25 @@ class DashboardFirestoreDataSource {
         blocked: dealer.provisionBloquee,
         withdrawable: dealer.provisonRetirable,
       ),
-      pendingOrder: null,
+      pendingOrder: pendingOrder == null
+          ? null
+          : PendingOrder(
+              orderNumber: pendingOrder.id,
+              amount: pendingOrder.total,
+              expiresIn:
+                  _acceptanceWindow -
+                  DateTime.now().difference(pendingOrder.orderDate),
+            ),
       dailyStats: DailyStats(
         date: DateTime.now(),
-        ordersCount: 0,
+        ordersCount: orders.length,
         marginEarned: 0,
-        deliveredCount: 0,
-        cancelledCount: 0,
+        deliveredCount: orders
+            .where((o) => o.status == OrderStatus.delivered)
+            .length,
+        cancelledCount: orders
+            .where((o) => o.status == OrderStatus.cancelled)
+            .length,
       ),
       productsSummary: ProductsSummary(
         productsCount: productsCount,

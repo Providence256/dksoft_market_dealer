@@ -5,12 +5,14 @@ import 'package:dksoft_market_dealer/features/dashboard/data/datasources/dashboa
 import 'package:dksoft_market_dealer/features/dashboard/data/repositories/dashboard_repository_impl.dart';
 import 'package:dksoft_market_dealer/features/dashboard/domain/entities/dashboard_snapshot.dart';
 import 'package:dksoft_market_dealer/features/dashboard/domain/repositories/dashboard_repository.dart';
+import 'package:dksoft_market_dealer/features/orders/data/orders_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final dashboardFirestoreDataSourceProvider =
     Provider<DashboardFirestoreDataSource>(
       (ref) => DashboardFirestoreDataSource(
         ref.watch(dealerRepositoryProvider),
+        ref.watch(ordersRepositoryProvider),
         FirebaseFirestore.instance,
       ),
     );

@@ -5,7 +5,8 @@ import 'package:dksoft_market_dealer/features/authentication/presentation/login_
 import 'package:dksoft_market_dealer/features/authentication/presentation/signup_screen.dart';
 import 'package:dksoft_market_dealer/features/authentication/presentation/widgets/role_guard.dart';
 import 'package:dksoft_market_dealer/features/catalog/presentation/catalog_screen.dart';
-import 'package:dksoft_market_dealer/features/commandes/commandes_screen.dart';
+import 'package:dksoft_market_dealer/features/orders/presentation/order_details_screen.dart';
+import 'package:dksoft_market_dealer/features/orders/presentation/orders_screen.dart';
 import 'package:dksoft_market_dealer/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:dksoft_market_dealer/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:dksoft_market_dealer/features/profile/profile_screen.dart';
@@ -23,6 +24,7 @@ enum AppRoute {
   provisionRequest,
   catalog,
   commandes,
+  orderDetails,
   wallet,
   profile,
   login,
@@ -128,7 +130,17 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: '/commandes',
                 name: AppRoute.commandes.name,
-                builder: (context, state) => CommandesScreen(),
+                builder: (context, state) => OrdersScreen(),
+                routes: [
+                  GoRoute(
+                    path: ':orderId',
+                    name: AppRoute.orderDetails.name,
+                    builder: (context, state) {
+                      final orderId = state.pathParameters['orderId']!;
+                      return OrderDetailsScreen(orderId: orderId);
+                    },
+                  ),
+                ],
               ),
             ],
           ),

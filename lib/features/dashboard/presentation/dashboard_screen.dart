@@ -56,7 +56,7 @@ class DashboardScreen extends ConsumerWidget {
                   gapH16,
                   PendingOrderCard(
                     order: snapshot.pendingOrder!,
-                    onViewOrder: () {},
+                    onViewOrder: () => context.goNamed(AppRoute.commandes.name),
                   ),
                 ],
                 gapH24,
